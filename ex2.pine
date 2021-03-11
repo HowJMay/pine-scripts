@@ -1,0 +1,32 @@
+// Thinking raw premium is no longer as relevant as 'relative premium', or premium as a % of spot price
+study(title="Relative BTC Premium", shorttitle="Relative Premium", precision=3)
+
+// Security
+src_spot = security("COINBASE:BTCUSD", period, close)
+src_byb = security("BYBIT:BTCUSD", period, close) 
+src_bin = security("BINANCE:BTCUSDTPERP", period, close) 
+src_huo = security("HUOBI:BTCPERP", period, close)
+src_ftx = security("FTX:BTCPERP", period, close)
+
+// Val
+byb_prem = nz(nz(src_byb[0]) - nz(src_spot[0]))
+bin_prem = nz(nz(src_bin[0]) - nz(src_spot[0]))
+huo_prem = nz(nz(src_huo[0]) - nz(src_spot[0]))
+ftx_prem = nz(nz(src_ftx[0]) - nz(src_spot[0]))
+relative_byb_prem = byb_prem * 100 / src_spot  
+relative_bin_prem = bin_prem * 100 / src_spot
+relative_huo_prem = huo_prem * 100 / src_spot
+relative_ftx_prem = ftx_prem * 100 / src_spot
+
+spanColor1 = relative_byb_prem > 0 ? green : red
+spanColor2 = relative_bin_prem > 0 ? orange : blue
+spanColor3 = relative_huo_prem > 0 ? orange : blue
+spanColor4 = relative_ftx_prem > 0 ? orange : blue
+
+// Plots
+plot(relative_byb_prem, title= 'Bybit', style=histogram, linewidth=1, color= spanColor1)
+plot(relative_bin_prem, title= 'Binance', style=histogram, linewidth=1, color= spanColor2)
+plot(relative_huo_prem, title= 'Huobi', style=histogram, linewidth=1, color= spanColor3)
+plot(relative_ftx_prem, title= 'FTX', style=histogram, linewidth=1, color= spanColor4)
+
+hline(0, title="Zero", color= gray)
